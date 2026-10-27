@@ -241,5 +241,9 @@ call s:InitStatusline()
 
 augroup ExtraStatus
     autocmd!
-    autocmd CursorMoved,CursorMovedI,CmdlineLeave,TextYankPost,BufEnter,BufWritePost,VimResized,WinEnter,TextChanged,TextChangedI * redrawstatus
+
+    " Reapply after other startup code has finished.
+    autocmd VimEnter * call timer_start(0, {_ -> execute('ExtraStatusReload')})
+    
+    autocmd TextYankPost,BufEnter,BufWritePost,VimResized,WinEnter * redrawstatus
 augroup END
