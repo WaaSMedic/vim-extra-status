@@ -237,10 +237,7 @@ function! s:InitStatusline() abort
     let &statusline = BuildStatusline(g:status_format)
 endfunction
 
-augroup ExtraStatusEnter
-    autocmd!
-    autocmd VimEnter * call s:InitStatusline()
-augroup END
+call s:InitStatusline()
 
 augroup ExtraStatus
     autocmd!
