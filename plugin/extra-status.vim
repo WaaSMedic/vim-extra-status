@@ -14,8 +14,8 @@
 
 let s:default_format = '(%-L,%C){%_}[%H:%M:%S]<%W>'
 
-if !exists('g:format')
-    let g:format = s:default_format
+if !exists('g:status_format')
+    let g:status_format = s:default_format
 endif
 if !exists('g:register_width')
     let g:register_width = 36
@@ -226,11 +226,21 @@ function! BuildStatusline(fmt)
     return l:out
 endfunction
 
-command! ExtraStatusReload let &statusline = BuildStatusline(g:format) | redrawstatus
-command! ExtraStatusCompile echo BuildStatusline(g:format)
+command! ExtraStatusReload let &statusline = BuildStatusline(g:status_format) | redrawstatus
+command! ExtraStatusCompile echo BuildStatusline(g:status_format)
 
-set laststatus=2
-let &statusline = BuildStatusline(g:format)
+"set laststatus=2
+function! s:InitStatusline() abort
+    if !exists('g:status_format')
+        let g:status_format = s:default_format
+    endif
+    let &statusline = BuildStatusline(g:status_format)
+endfunction
+
+augroup ExtraStatusEnter
+    autocmd!
+    autocmd VimEnter * call s:InitStatusline()
+augroup END
 
 augroup ExtraStatus
     autocmd!
